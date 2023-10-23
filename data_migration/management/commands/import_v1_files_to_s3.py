@@ -82,7 +82,8 @@ class Command(BaseCommand):
             "number_of_files_processed": 0,
             "query_name": query_model.query_name,
             "started_at": datetime.datetime.now().strftime(self.DATETIME_FORMAT),
-        } | query_parameters
+            "parameters": query_parameters,
+        }
 
     def process_query_and_upload(
         self, query_model: QueryModel, query_parameters: dict, row_count: int
@@ -182,11 +183,7 @@ class Command(BaseCommand):
         last_run_data = self.get_last_run_data(query_model)
         if not last_run_data:
             return query_model.parameters
-
-        parameters = {}
-        for _param in self.REQUIRED_QUERY_PARAMETERS:
-            parameters[_param] = last_run_data[_param]
-        return parameters
+        return last_run_data["parameters"] | {"created_datetime": last_run_data["created_datetime"]}
 
     def write_run_data_to_s3(self, result: dict[str, Any]) -> None:
         """Writes a (json) file to s3, which contains the details of the completed or partial run."""
