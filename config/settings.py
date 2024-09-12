@@ -552,5 +552,3 @@ STORAGES = {
     },
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
-
-COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
